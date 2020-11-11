@@ -1,0 +1,4 @@
+linecount=$(cat $1 | wc -l)
+linecount=$(($linecount / 2))
+head -n $linecount $1 > "$1_0"
+tail -n $linecount $1 > "$1_1"

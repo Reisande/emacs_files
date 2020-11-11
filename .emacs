@@ -37,7 +37,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
 	 ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
+   '(gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
@@ -176,3 +176,8 @@
           (save-buffer))
          (er-refresh-etags extension)
          ad-do-it))))
+
+(require 'bash-completion)
+(bash-completion-setup)
+
+(require 'gnuplot-mode)
