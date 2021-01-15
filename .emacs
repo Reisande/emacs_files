@@ -37,7 +37,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
 	 ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
+   '(verona-mode cuda-mode opencl-mode company-irony-c-headers gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
@@ -117,7 +117,6 @@
 
 (setq company-idle-delay 0)
 
-
 (add-hook 'c++-mode-hook 'irony-mode)
 (add-hook 'c-mode-hook 'irony-mode)
 (add-hook 'objc-mode-hook 'irony-mode)
@@ -181,3 +180,10 @@
 (bash-completion-setup)
 
 (require 'gnuplot-mode)
+
+(add-hook 'find-file-hook
+          '(lambda () (company-mode)))
+
+(add-hook 'c++-mode-hook 'go-mode)
+
+(require 'verona-mode)
