@@ -1,0 +1,2 @@
+;;; Generated package description from /home/misha/.emacs.d/elpa/verona-mode-20200823.536/verona-mode.el  -*- no-byte-compile: t -*-
+(define-package "verona-mode" "20200823.536" "A major mode for the Verona programming language" '((emacs "25.1") (dash "2.17.0") (hydra "0.15.0")) :commit "72dd31ef847344d79409503f3c42169041eb3da4" :keywords '("languages" "programming") :url "https://github.com/damon-kwok/verona-mode")
