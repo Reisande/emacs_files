@@ -37,7 +37,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
 	 ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(verona-mode cuda-mode opencl-mode company-irony-c-headers gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
+   '(yasnippet-snippets verona-mode cuda-mode opencl-mode company-irony-c-headers gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
@@ -67,7 +67,7 @@
 (toggle-scroll-bar -1)
 (put 'dired-find-alternate-file 'disabled nil)
 
-(setq-default c-basic-offset 4)
+(setq-default c-basic-offset 2)
 
 (require 'package)
 (add-to-list 'package-archives
@@ -161,7 +161,7 @@
   "Create tags file."
   (interactive "DDirectory: ")
   (eshell-command 
-   (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
+   (format "find %s -type f -name \"*.[ch(cpp)]\" | etags -" dir-name)))
 
 (defadvice find-tag (around refresh-etags activate)
    "Rerun etags and reload tags if tag not found and redo find-tag.              
@@ -184,6 +184,11 @@
 (add-hook 'find-file-hook
           '(lambda () (company-mode)))
 
-(add-hook 'c++-mode-hook 'go-mode)
+(add-hook 'c++-mode-hook 'c++-mode)
 
 (require 'verona-mode)
+
+(require 'yasnippet)
+(yas-global-mode 1)
+
+(setq-default indent-tabs-mode nil)
