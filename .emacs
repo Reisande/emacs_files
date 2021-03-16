@@ -35,30 +35,30 @@
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
-	 ("melpa" . "https://melpa.org/packages/")))
+     ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(yasnippet-snippets verona-mode cuda-mode opencl-mode company-irony-c-headers gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
+   '(merlin-eldoc company-c-headers rtags yasnippet-snippets verona-mode cuda-mode opencl-mode company-irony-c-headers gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
    '((20 . "#BC8383")
-	 (40 . "#CC9393")
-	 (60 . "#DFAF8F")
-	 (80 . "#D0BF8F")
-	 (100 . "#E0CF9F")
-	 (120 . "#F0DFAF")
-	 (140 . "#5F7F5F")
-	 (160 . "#7F9F7F")
-	 (180 . "#8FB28F")
-	 (200 . "#9FC59F")
-	 (220 . "#AFD8AF")
-	 (240 . "#BFEBBF")
-	 (260 . "#93E0E3")
-	 (280 . "#6CA0A3")
-	 (300 . "#7CB8BB")
-	 (320 . "#8CD0D3")
-	 (340 . "#94BFF3")
-	 (360 . "#DC8CC3")))
+     (40 . "#CC9393")
+     (60 . "#DFAF8F")
+     (80 . "#D0BF8F")
+     (100 . "#E0CF9F")
+     (120 . "#F0DFAF")
+     (140 . "#5F7F5F")
+     (160 . "#7F9F7F")
+     (180 . "#8FB28F")
+     (200 . "#9FC59F")
+     (220 . "#AFD8AF")
+     (240 . "#BFEBBF")
+     (260 . "#93E0E3")
+     (280 . "#6CA0A3")
+     (300 . "#7CB8BB")
+     (320 . "#8CD0D3")
+     (340 . "#94BFF3")
+     (360 . "#DC8CC3")))
  '(vc-annotate-very-old-color "#DC8CC3"))
 (setq column-number-mode t)
 (setq-default tab-width 4)
@@ -157,11 +157,15 @@
 
 (add-to-list 'load-path "~/gocode/src/github.com/dougm/goflymake")
 
-(defun create-tags (dir-name)
-  "Create tags file."
-  (interactive "DDirectory: ")
-  (eshell-command 
-   (format "find %s -type f -name \"*.[ch(cpp)]\" | etags -" dir-name)))
+(defun create-tags ()
+  "compile etags for the current project"
+  (interactive)
+  (compile "find . -name \"*.[chCH(cc)(hh)]\" -print | etags -"))
+
+(defun create-tags-exuberant ()
+  "compile etags for the current project"
+  (interactive)
+  (compile "find . -name \"*.[chCH(cc)(hh)]\" -print | etags -L -"))
 
 (defadvice find-tag (around refresh-etags activate)
    "Rerun etags and reload tags if tag not found and redo find-tag.              
@@ -185,6 +189,9 @@
           '(lambda () (company-mode)))
 
 (add-hook 'c++-mode-hook 'c++-mode)
+(add-to-list 'auto-mode-alist '("\\.cc\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.c++\\'" . c++-mode))
 
 (require 'verona-mode)
 
@@ -192,3 +199,6 @@
 (yas-global-mode 1)
 
 (setq-default indent-tabs-mode nil)
+
+
+(define-key key-translation-map (kbd "C-a") (kbd "M-m"))
