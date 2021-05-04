@@ -1,7 +1,7 @@
 '(package-archives
-(quote
-(("melpa" . "http://melpa.milkbox.net/packages/")
-("gnu" . "http://elpa.gnu.org/packages/"))))
+  (quote
+   (("melpa" . "http://melpa.milkbox.net/packages/")
+    ("gnu" . "http://elpa.gnu.org/packages/"))))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -16,7 +16,7 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-;(package-initialize)
+                                        ;(package-initialize)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -37,7 +37,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(merlin-eldoc company-c-headers rtags yasnippet-snippets verona-mode cuda-mode opencl-mode company-irony-c-headers gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme company-irony irony tide haskell-mode company-racer racer rust-mode))
+   '(merlin-eldoc company-c-headers rtags yasnippet-snippets verona-mode cuda-mode opencl-mode gnuplot-mode bash-completion go-dlv dockerfile-mode docker merlin tuareg yasnippet lsp-ui lsp-mode company-go company go-guru flycheck-gometalinter go-autocomplete go-complete go-mode auto-complete magit ample-theme tide haskell-mode company-racer racer rust-mode))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(vc-annotate-background "#2B2B2B")
  '(vc-annotate-color-map
@@ -82,10 +82,6 @@
  ;; If there is more than one, they won't work right.
  )
 
-;(add-hook 'rust-mode-hook #'racer-mode)
-;(add-hook 'racer-mode-hook #'eldoc-mode)
-;(add-hook 'racer-mode-hook #'company-mode)
-
 (show-paren-mode 1)
 (electric-pair-mode 1)
 (setq electric-pair-pairs
@@ -117,15 +113,6 @@
 
 (setq company-idle-delay 0)
 
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
-
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-
-(eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
-
 (defun my-ssh (user host port)
   "Connect to a remote host by SSH."
   (interactive "sUser: \nsHost: \nsPort (default 22): ")
@@ -135,7 +122,6 @@
     (term-mode)
     (term-char-mode)
     (switch-to-buffer "*ssh*")))
-
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'zenburn t)
@@ -168,17 +154,17 @@
   (compile "find . -name \"*.[chCH(cc)(hh)]\" -print | etags -L -"))
 
 (defadvice find-tag (around refresh-etags activate)
-   "Rerun etags and reload tags if tag not found and redo find-tag.              
+  "Rerun etags and reload tags if tag not found and redo find-tag.              
    If buffer is modified, ask about save before running etags."
   (let ((extension (file-name-extension (buffer-file-name))))
     (condition-case err
-    ad-do-it
+        ad-do-it
       (error (and (buffer-modified-p)
-          (not (ding))
-          (y-or-n-p "Buffer is modified, save it? ")
-          (save-buffer))
-         (er-refresh-etags extension)
-         ad-do-it))))
+                  (not (ding))
+                  (y-or-n-p "Buffer is modified, save it? ")
+                  (save-buffer))
+             (er-refresh-etags extension)
+             ad-do-it))))
 
 (require 'bash-completion)
 (bash-completion-setup)
@@ -192,6 +178,8 @@
 (add-to-list 'auto-mode-alist '("\\.cc\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.cpp\\'" . c++-mode))
 (add-to-list 'auto-mode-alist '("\\.c++\\'" . c++-mode))
+(add-to-list 'auto-mode-alist '("\\.c\\'" . c-mode))
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 (require 'verona-mode)
 
@@ -200,5 +188,34 @@
 
 (setq-default indent-tabs-mode nil)
 
-
 (define-key key-translation-map (kbd "C-a") (kbd "M-m"))
+
+(setq package-selected-packages '(lsp-mode yasnippet lsp-treemacs helm-lsp
+                                           projectile hydra flycheck company avy which-key helm-xref dap-mode))
+
+(when (cl-find-if-not #'package-installed-p package-selected-packages)
+  (package-refresh-contents)
+  (mapc #'package-install package-selected-packages))
+
+;; sample `helm' configuration use https://github.com/emacs-helm/helm/ for details
+(helm-mode)
+(require 'helm-xref)
+(define-key global-map [remap find-file] #'helm-find-files)
+(define-key global-map [remap execute-extended-command] #'helm-M-x)
+(define-key global-map [remap switch-to-buffer] #'helm-mini)
+
+(which-key-mode)
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
+
+(setq gc-cons-threshold (* 100 1024 1024)
+      read-process-output-max (* 1024 1024)
+      treemacs-space-between-root-nodes nil
+      company-idle-delay 0.0
+      company-minimum-prefix-length 1
+      lsp-idle-delay 0.1)  ;; clangd is fast
+
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+  (require 'dap-cpptools)
+  (yas-global-mode))

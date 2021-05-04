@@ -1,0 +1,16 @@
+;; Object semanticdb-project-database-file-158294f22ccc
+;; SEMANTICDB Tags save file
+(semanticdb-project-database-file "semanticdb-project-database-file-158294f22ccc"
+  :tables
+  (list
+    (semanticdb-table "semanticdb-table-158294f3f5dc"
+      :major-mode c++-mode
+      :tags nil
+      :file "simd.c++"
+      :pointmax 38
+      :fsize 37
+      :lastmodtime '(24601 60457 289768 988000)
+      :unmatched-syntax nil))
+  :file "!home!misha!Documents!verona-notes!samples!semantic.cache"
+  :semantic-tag-version "2.0"
+  :semanticdb-version "2.2")
